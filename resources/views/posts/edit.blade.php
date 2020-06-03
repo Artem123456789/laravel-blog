@@ -1,29 +1,36 @@
 @extends('layouts.app')
 
 @section('content')
-    <form action="{{ route('posts.update', $post) }}" method="POST">
-        @csrf
-        @method('PUT')
-        <div class="form-group">
-            <label for="header"
-                   class="form-control">
-                Заголовок
-            </label>
-            <input type="text" class="form-control" name="header" id="header" value="{{ $post->header }}">
-            <label for="body"
-                   class="form-control">
-                Тело поста
-            </label>
-            <textarea name="body" id="body" cols="30" rows="10" class="form-control">{{ $post->body }}</textarea>
-            <label for="new-tag" class="form-control">Название тега</label>
-            <input type="text" name="new-tag" id="new-tag" class="form-control">
-            <div class="btn btn-info" id="add-tag-btn" onclick="addTagFromButton()">Добавить тег</div>
-            <div class="btn btn-danger" onclick="removeTag()">Удалить тег</div>
-            <div id="tag-viewer"></div>
-            <textarea style="display: none;" name="tags" class="form-control" id="tags">{{ $post->tags }}</textarea>
-            <button class="btn btn-success">Сохранить</button>
+    <div class="container">
+        <div class="card card-body">
+            <form action="{{ route('posts.update', $post) }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label for="header">
+                        Заголовок:
+                    </label>
+                    <input type="text" class="form-control" name="header" id="header" value="{{ $post->header }}">
+                </div>
+                <div class="form-group">
+                    <label for="body">
+                        Текст поста:
+                    </label>
+                    <textarea name="body" id="body" cols="30" rows="10" class="form-control">{{ $post->body }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="new-tag" class="form-control">Название тега</label>
+                    <input type="text" name="new-tag" id="new-tag" class="form-control">
+                    <div class="tag-buttons">
+                        <div class="btn btn-info" id="add-tag-btn" onclick="addTagFromButton()">Добавить тег</div>
+                        <div class="btn btn-danger" onclick="removeTag()">Удалить тег</div>
+                    </div>
+                    <div id="tag-viewer"></div>
+                    <textarea style="display: none;" name="tags" class="form-control" id="tags" onclick="removeTag()">{{ $post->tags }}</textarea>
+                </div>
+                <button class="btn btn-success">Сохранить</button>
+            </form>
         </div>
-    </form>
+    </div>
     <script>
         let tagOnRemove;
         function addTag(newTagName){
@@ -59,8 +66,15 @@
 @endsection
 <style>
     .tag{
-        max-width: 30%;
+        margin: 5px 0px 5px 0px;
+        max-width: 10%;
+        max-height: 10%;
         background-color: gray;
-        border-radius: 30%;
+        border-radius: 5%;
+        text-align: center;
+        line-height: 20px;
+    }
+    .tag-buttons{
+        padding: 10px 0px 10px 0px;
     }
 </style>
