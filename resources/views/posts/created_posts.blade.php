@@ -18,12 +18,17 @@
                     <td class="p2 text-center">{{ $post->id }}</td>
                     <td class="p-0">
                         <a href="{{ route('posts.show', $post) }}" class="p-2 d-block w-100">
-                            {{ $todo->title }}
+                            {{ $post->header }}
                         </a>
                     </td>
                     <td class="p2">
                         <form class="ml-auto" action="{{ route('posts.destroy', $post) }}" method="POST">
-                            <button class="btn btn-danger">Удалить</button>
+                            @csrf
+                            @method('DELETE')
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-info" href="{{ route('posts.edit', $post) }}">Редактировать</a>
+                                <button class="btn btn-danger">Удалить</button>
+                            </div>
                         </form>
                     </td>
                 </tr>

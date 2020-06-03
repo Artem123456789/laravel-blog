@@ -2,18 +2,20 @@
 
 @section('content')
     @if(Auth::check())
-        <a href="/posts">Мои посты</a>
     @endif
-    @forelse($posts as $post)
-        <div>
-            <h1>
-                {{ $post->header }}
-            </h1>
-            <p>{{ $post->tags }}</p>
-        </div>
-    @empty
-        <div>
-            Постов пока нет еще нет
-        </div>
-    @endforelse
+    <div class="container">
+        <a href="/posts" class="d-flex">Мои посты</a>
+        @forelse($posts as $post)
+            <div>
+                <h1>
+                    <a href="{{ route('posts.show', $post) }}">{{ $post->header }}</a>
+                </h1>
+                <b class="tags">Теги: {{ $post->tags }}</b>
+            </div>
+        @empty
+            <div>
+                Постов пока нет еще нет
+            </div>
+        @endforelse
+    </div>
 @endsection

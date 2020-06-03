@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\Post;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,7 @@ class PostController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $posts = $user->posts();
+        $posts = $user->posts;
         return view('posts.created_posts', [
             'user' => $user,
             'posts' => $posts
@@ -29,6 +30,7 @@ class PostController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Post::class);
         return view('posts.create');
     }
 
@@ -40,6 +42,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Post::class);
         $data = $request->validate([
             'header' => 'required',
             'body' => 'required',
@@ -58,7 +61,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $this->authorize('view', $post);
+        return view('posts.show', compact('post'));
     }
 
     /**
@@ -69,7 +73,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $this->authorize('update', $post);
+        return view('posts.edit', compact('post'));
     }
 
     /**
@@ -81,7 +86,15 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $this->authorize('update', $post);
+        $data = $request->validate([
+            'header' => 'required',
+            'body' => 'required',
+            'tags' => 'required'
+        ]);
+
+        $post->update($data);
+        return redirect()->route('posts.show', $post);
     }
 
     /**
@@ -94,6 +107,17 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post);
         $post->delete();
-        return redirect()->route('todos.index');
+        return redirect()->route('posts.index');
+    }
+
+    public function addComment(Request $request, Post $post){
+        $data = $request->validate([
+            'body' => 'required',
+        ]);
+        $data['user_id'] = auth()->user()->id;
+        //dd($data);
+        $comments = $post->comments();
+        $new = $comments->create($data);
+        return redirect()->route('posts.show', $post);
     }
 }
